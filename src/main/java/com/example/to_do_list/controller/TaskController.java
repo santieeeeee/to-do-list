@@ -2,6 +2,12 @@ package com.example.to_do_list.controller;
 
 import com.example.to_do_list.model.Task;
 import com.example.to_do_list.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/api/tasks")
+@Tag(name = "Task Controller", description = "APIs for managing To-Do tasks")
 public class TaskController {
 
     private final TaskService taskService;
@@ -19,43 +26,96 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    @Operation(summary = "Get all tasks", description = "Retrieve a list of all tasks")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks")
+    public ResponseEntity<List<Task>> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
+        return ResponseEntity.ok(tasks);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+    @Operation(summary = "Get task by ID", description = "Retrieve a specific task by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task found"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
+    public ResponseEntity<Task> getTaskById(
+            @Parameter(description = "ID of the task to be retrieved")
+            @PathVariable Long id) {
         return taskService.getTaskById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+    @Operation(summary = "Create a new task", description = "Create a new task with the provided details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Task created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
+    public ResponseEntity<Task> createTask(
+            @Parameter(description = "Task object to be created")
+            @Valid @RequestBody Task task) {
         Task created = taskService.createTask(task);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+    @Operation(summary = "Update a task", description = "Update an existing task completely")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Task not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
+    public ResponseEntity<Task> updateTask(
+            @Parameter(description = "ID of the task to be updated")
+            @PathVariable Long id,
+            @Parameter(description = "Updated task object")
+            @Valid @RequestBody Task task) {
         return taskService.updateTask(id, task)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Task> patchTask(@PathVariable Long id, @RequestBody Task partialUpdate) {
+    @Operation(summary = "Partially update a task", description = "Update specific fields of an existing task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
+    public ResponseEntity<Task> patchTask(
+            @Parameter(description = "ID of the task to be updated")
+            @PathVariable Long id,
+            @Parameter(description = "Partial task object with fields to update")
+            @RequestBody Task partialUpdate) {
         return taskService.patchTask(id, partialUpdate)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+    @Operation(summary = "Delete a task", description = "Delete a task by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Task deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
+    public ResponseEntity<Void> deleteTask(
+            @Parameter(description = "ID of the task to be deleted")
+            @PathVariable Long id) {
         if (taskService.deleteTask(id)) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/status/{status}")
+    @Operation(summary = "Get tasks by status", description = "Retrieve tasks filtered by status")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered tasks")
+    public ResponseEntity<List<Task>> getTasksByStatus(
+            @Parameter(description = "Status to filter tasks (todo, in_progress, done)")
+            @PathVariable String status) {
+        List<Task> tasks = taskService.getTasksByStatus(status);
+        return ResponseEntity.ok(tasks);
     }
 }

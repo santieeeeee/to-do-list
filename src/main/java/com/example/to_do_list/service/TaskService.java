@@ -1,50 +1,78 @@
 package com.example.to_do_list.service;
 
+import com.example.to_do_list.exception.NotFoundException;
 import com.example.to_do_list.model.Task;
+import com.example.to_do_list.repository.TaskRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
-    private final Map<Long, Task> tasks = new HashMap<>();
-    private long nextId = 1;
+
+    private final TaskRepository taskRepository;
+
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public List<Task> getAllTasks() {
-        return new ArrayList<>(tasks.values());
+        return taskRepository.findAll();
     }
 
     public Optional<Task> getTaskById(Long id) {
-        return Optional.ofNullable(tasks.get(id));
+        return taskRepository.findById(id);
     }
 
+    @Transactional
     public Task createTask(Task task) {
-        task.setId(nextId++);
-        tasks.put(task.getId(), task);
-        return task;
+        if (task.getStatus() == null) {
+            task.setStatus("todo");
+        }
+        return taskRepository.save(task);
     }
 
+    @Transactional
     public Optional<Task> updateTask(Long id, Task task) {
-        if (tasks.containsKey(id)) {
-            task.setId(id);
-            tasks.put(id, task);
-            return Optional.of(task);
+        if (!taskRepository.existsById(id)) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        task.setId(id);
+        return Optional.of(taskRepository.save(task));
     }
 
+    @Transactional
     public Optional<Task> patchTask(Long id, Task partial) {
-        Task existing = tasks.get(id);
-        if (existing != null) {
-            if (partial.getTitle() != null) existing.setTitle(partial.getTitle());
-            if (partial.getDescription() != null) existing.setDescription(partial.getDescription());
-            if (partial.getStatus() != null) existing.setStatus(partial.getStatus());
-            return Optional.of(existing);
-        }
-        return Optional.empty();
+        return taskRepository.findById(id)
+                .map(existing -> {
+                    if (partial.getTitle() != null && !partial.getTitle().isEmpty()) {
+                        existing.setTitle(partial.getTitle());
+                    }
+                    if (partial.getDescription() != null) {
+                        existing.setDescription(partial.getDescription());
+                    }
+                    if (partial.getStatus() != null && !partial.getStatus().isEmpty()) {
+                        existing.setStatus(partial.getStatus());
+                    }
+                    return taskRepository.save(existing);
+                });
     }
 
+    @Transactional
     public boolean deleteTask(Long id) {
-        return tasks.remove(id) != null;
+        if (taskRepository.existsById(id)) {
+            taskRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    // Дополнительные методы для расширения функционала
+    public List<Task> getTasksByStatus(String status) {
+        return taskRepository.findAll().stream()
+                .filter(task -> status.equals(task.getStatus()))
+                .toList();
     }
 }

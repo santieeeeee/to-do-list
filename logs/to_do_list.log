@@ -1,0 +1,14 @@
+2026-01-06T14:15:43.993+03:00  INFO 16452 --- [main] c.e.to_do_list.ToDoListApplication       : Starting ToDoListApplication using Java 25.0.1 with PID 16452 (/Users/admin/IdeaProjects/os_kollok/target/classes started by admin in /Users/admin/IdeaProjects/os_kollok)
+2026-01-06T14:15:43.994+03:00  INFO 16452 --- [main] c.e.to_do_list.ToDoListApplication       : No active profile set, falling back to 1 default profile: "default"
+2026-01-06T14:15:44.358+03:00  INFO 16452 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-06T14:15:44.364+03:00  INFO 16452 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-06T14:15:44.364+03:00  INFO 16452 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.18]
+2026-01-06T14:15:44.386+03:00  INFO 16452 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-06T14:15:44.386+03:00  INFO 16452 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 373 ms
+2026-01-06T14:15:44.586+03:00  INFO 16452 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-01-06T14:15:44.590+03:00  INFO 16452 --- [main] c.e.to_do_list.ToDoListApplication       : Started ToDoListApplication in 0.818 seconds (process running for 1.186)
+2026-01-06T14:15:51.511+03:00  INFO 16452 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-06T14:15:51.513+03:00  INFO 16452 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-06T14:15:51.515+03:00  INFO 16452 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-01-06T14:18:08.348+03:00  WARN 16452 --- [http-nio-8080-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<com.example.to_do_list.model.Task> com.example.to_do_list.controller.TaskController.createTask(com.example.to_do_list.model.Task)]
+2026-01-06T14:18:17.181+03:00  WARN 16452 --- [http-nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<com.example.to_do_list.model.Task> com.example.to_do_list.controller.TaskController.createTask(com.example.to_do_list.model.Task)]
