@@ -1,6 +1,5 @@
 package com.example.to_do_list.service;
 
-import com.example.to_do_list.exception.NotFoundException;
 import com.example.to_do_list.model.Task;
 import com.example.to_do_list.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -69,7 +68,6 @@ public class TaskService {
         return false;
     }
 
-    // Дополнительные методы для расширения функционала
     public List<Task> getTasksByStatus(String status) {
         return taskRepository.findAll().stream()
                 .filter(task -> status.equals(task.getStatus()))

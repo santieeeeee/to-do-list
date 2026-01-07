@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List API Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .api-status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 i {
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #5a6fd8, #6a4290);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(to right, #48bb78, #38a169);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(to right, #3ea76c, #2d855d);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(to right, #f56565, #e53e3e);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(to right, #e05252, #c53030);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #a0aec0, #718096);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #90a0b3, #62758a);
+            transform: translateY(-2px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tasks-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .task-item {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .task-item:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+
+        .task-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-todo {
+            background-color: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-in_progress {
+            background-color: #fefcbf;
+            color: #744210;
+        }
+
+        .status-done {
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+
+        .task-description {
+            color: #718096;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .api-endpoints {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .endpoint-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .method-get {
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+
+        .method-post {
+            background-color: #bee3f8;
+            color: #2c5282;
+        }
+
+        .method-put {
+            background-color: #fefcbf;
+            color: #744210;
+        }
+
+        .method-patch {
+            background-color: #e9d8fd;
+            color: #553c9a;
+        }
+
+        .method-delete {
+            background-color: #fed7d7;
+            color: #c53030;
+        }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .response-container {
+            background: #1a202c;
+            color: #cbd5e0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .tab-container {
+            margin-top: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #718096;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            padding: 20px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            border-left: 4px solid #48bb78;
+        }
+
+        .toast-error {
+            border-left: 4px solid #f56565;
+        }
+
+        .toast-info {
+            border-left: 4px solid #4299e1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-tasks"></i> To-Do List API Dashboard</h1>
+        <p>Interactive interface to test and manage your To-Do List API endpoints</p>
+        <div class="api-status">
+            <div class="status-indicator"></div>
+            <span>API is running at: <strong>http://localhost:8080</strong></span>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="card">
+            <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Create New Task</h2>
+            <form id="createTaskForm">
+                <div class="form-group">
+                    <label for="title">Task Title *</label>
+                    <input type="text" id="title" class="form-control" placeholder="Enter task title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" class="form-control" rows="3" placeholder="Enter task description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" class="form-control">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Task
+                    </button>
+                    <button type="button" id="cancelEditBtn" class="btn btn-secondary"
+                            onclick="cancelEdit()" style="display: none; margin-left: 10px;">
+                        <i class="fas fa-times"></i> Cancel Edit
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-list"></i> Task List</h2>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="loadAllTasks()">
+                    <i class="fas fa-sync-alt"></i> Refresh All
+                </button>
+                <button class="btn btn-success" onclick="filterTasks('all')">
+                    All Tasks
+                </button>
+                <button class="btn btn-secondary" onclick="filterTasks('todo')">
+                    To Do
+                </button>
+                <button class="btn btn-secondary" onclick="filterTasks('in_progress')">
+                    In Progress
+                </button>
+                <button class="btn btn-secondary" onclick="filterTasks('done')">
+                    Done
+                </button>
+            </div>
+
+            <div id="tasksContainer" class="tasks-container">
+                <div class="empty-state">
+                    <i class="fas fa-tasks"></i>
+                    <p>Loading tasks...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 30px;">
+        <h2><i class="fas fa-code"></i> API Endpoints</h2>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('endpoints')">Endpoints</div>
+                <div class="tab" onclick="switchTab('test')">Test API</div>
+                <div class="tab" onclick="switchTab('docs')">Documentation</div>
+            </div>
+
+            <div id="endpointsTab" class="tab-content active">
+                <div class="api-endpoints">
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/tasks</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Get all tasks</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/tasks/{id}</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Get task by ID</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/tasks</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Create new task</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-put">PUT</span>
+                        <span class="endpoint-path">/api/tasks/{id}</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Update task</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-patch">PATCH</span>
+                        <span class="endpoint-path">/api/tasks/{id}</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Partial update</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-delete">DELETE</span>
+                        <span class="endpoint-path">/api/tasks/{id}</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Delete task</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/tasks/status/{status}</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Filter by status</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/swagger-ui</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Swagger UI</p>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/h2-console</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Database Console</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="testTab" class="tab-content">
+                <div class="form-group">
+                    <label for="testEndpoint">Select Endpoint</label>
+                    <select id="testEndpoint" class="form-control" onchange="updateTestForm()">
+                        <option value="GET /api/tasks">GET /api/tasks</option>
+                        <option value="GET /api/tasks/{id}">GET /api/tasks/{id}</option>
+                        <option value="POST /api/tasks">POST /api/tasks</option>
+                        <option value="PUT /api/tasks/{id}">PUT /api/tasks/{id}</option>
+                        <option value="DELETE /api/tasks/{id}">DELETE /api/tasks/{id}</option>
+                    </select>
+                </div>
+
+                <div id="testParams" style="margin-bottom: 20px;">
+                </div>
+
+                <button class="btn btn-primary" onclick="sendTestRequest()">
+                    <i class="fas fa-play"></i> Send Request
+                </button>
+
+                <div id="testResponse" class="response-container" style="display: none;">
+                    <pre id="responseContent">Response will appear here...</pre>
+                </div>
+            </div>
+
+            <div id="docsTab" class="tab-content">
+                <h3 style="margin-bottom: 15px; color: #4a5568;">API Documentation</h3>
+                <p style="margin-bottom: 15px; line-height: 1.6;">
+                    This is a RESTful API for managing To-Do tasks. All endpoints return JSON data.
+                </p>
+
+                <h4 style="margin: 20px 0 10px 0; color: #4a5568;">Task Object Structure</h4>
+                <div class="response-container">
+                    {
+                    "id": 1,
+                    "title": "Task title",
+                    "description": "Task description",
+                    "status": "todo"
+                    }
+                </div>
+
+                <h4 style="margin: 20px 0 10px 0; color: #4a5568;">Status Values</h4>
+                <ul style="padding-left: 20px; color: #4a5568;">
+                    <li><strong>todo</strong>: Task is pending</li>
+                    <li><strong>in_progress</strong>: Task is in progress</li>
+                    <li><strong>done</strong>: Task is completed</li>
+                </ul>
+
+                <h4 style="margin: 20px 0 10px 0; color: #4a5568;">Testing Tools</h4>
+                <p style="margin-bottom: 15px; line-height: 1.6;">
+                    You can also test the API using:
+                </p>
+                <ul style="padding-left: 20px; color: #4a5568;">
+                    <li><strong>Swagger UI</strong>: <a href="/swagger-ui" style="color: #667eea;">/swagger-ui</a></li>
+                    <li><strong>Database Console</strong>: <a href="/h2-console" style="color: #667eea;">/h2-console</a> (JDBC URL: jdbc:h2:mem:todo_db)</li>
+                    <li><strong>cURL</strong>: Use the command line for testing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>To-Do List API Dashboard &copy; 2024 | Spring Boot Backend | Interactive Frontend</p>
+        <p>Use this interface to test all CRUD operations of your API</p>
+    </div>
+</div>
+
+<div id="toast" class="toast">
+    <i id="toastIcon" class="fas fa-check-circle"></i>
+    <span id="toastMessage">Operation completed successfully!</span>
+</div>
+
+<script>
+    let editingTaskId = null;
+    let currentFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadAllTasks();
+        updateTestForm();
+    });
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastMessage = document.getElementById('toastMessage');
+
+        toast.className = 'toast';
+        toast.classList.add(`toast-${type}`);
+
+        if (type === 'success') {
+            toastIcon.className = 'fas fa-check-circle';
+            toastIcon.style.color = '#48bb78';
+        } else if (type === 'error') {
+            toastIcon.className = 'fas fa-exclamation-circle';
+            toastIcon.style.color = '#f56565';
+        } else {
+            toastIcon.className = 'fas fa-info-circle';
+            toastIcon.style.color = '#4299e1';
+        }
+
+        toastMessage.textContent = message;
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        document.getElementById(tabName + 'Tab').classList.add('active');
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Find the clicked tab and add active class
+        const tabs = document.querySelectorAll('.tab');
+        for (let i = 0; i < tabs.length; i++) {
+            if (tabs[i].textContent.includes(tabName === 'endpoints' ? 'Endpoints' :
+                                             tabName === 'test' ? 'Test API' : 'Documentation')) {
+                tabs[i].classList.add('active');
+                break;
+            }
+        }
+    }
+
+    document.getElementById('createTaskForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const status = document.getElementById('status').value;
+
+        if (!title.trim()) {
+            showToast('Title is required', 'error');
+            return;
+        }
+
+        try {
+            let response;
+            let url;
+            let method;
+
+            if (editingTaskId) {
+                url = `/api/tasks/${editingTaskId}`;
+                method = 'PUT';
+            } else {
+                url = '/api/tasks';
+                method = 'POST';
+            }
+
+            response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    status: status
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to ${editingTaskId ? 'update' : 'create'} task: ${response.status}`);
+            }
+
+            const task = await response.json();
+
+            document.getElementById('createTaskForm').reset();
+
+            if (editingTaskId) {
+                updateTaskInList(task);
+                showToast(`Task "${task.title}" updated successfully!`, 'success');
+
+                cancelEdit();
+            } else {
+                addTaskToList(task);
+                showToast(`Task "${task.title}" created successfully!`, 'success');
+            }
+
+            if (currentFilter !== 'all') {
+                applyCurrentFilter();
+            }
+
+        } catch (error) {
+            showToast(`Error ${editingTaskId ? 'updating' : 'creating'} task: ${error.message}`, 'error');
+            console.error('Error:', error);
+        }
+    });
+
+    function cancelEdit() {
+        editingTaskId = null;
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Create New Task';
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> Create Task';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.getElementById('createTaskForm').reset();
+    }
+
+    async function loadAllTasks() {
+        try {
+            const response = await fetch('/api/tasks');
+            if (!response.ok) {
+                throw new Error(`Failed to load tasks: ${response.status} ${response.statusText}`);
+            }
+
+            const tasks = await response.json();
+            displayTasks(tasks);
+
+            updateFilterButtons('all');
+
+        } catch (error) {
+            showToast('Error loading tasks: ' + error.message, 'error');
+            console.error('Error:', error);
+        }
+    }
+
+    async function filterTasks(status) {
+        try {
+            let url = '/api/tasks';
+            if (status !== 'all') {
+                url = `/api/tasks/status/${status}`;
+            }
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to load tasks');
+            }
+
+            const tasks = await response.json();
+            displayTasks(tasks);
+
+            updateFilterButtons(status);
+
+        } catch (error) {
+            showToast('Error loading tasks: ' + error.message, 'error');
+            console.error('Error:', error);
+        }
+    }
+
+    function updateFilterButtons(activeFilter) {
+        currentFilter = activeFilter;
+
+        const allButton = document.querySelector('.btn-group .btn:nth-child(2)');
+        const todoButton = document.querySelector('.btn-group .btn:nth-child(3)');
+        const inProgressButton = document.querySelector('.btn-group .btn:nth-child(4)');
+        const doneButton = document.querySelector('.btn-group .btn:nth-child(5)');
+
+        [allButton, todoButton, inProgressButton, doneButton].forEach(btn => {
+            if (btn) {
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-secondary');
+            }
+        });
+
+        switch(activeFilter) {
+            case 'all':
+                if (allButton) {
+                    allButton.classList.remove('btn-secondary');
+                    allButton.classList.add('btn-success');
+                }
+                break;
+            case 'todo':
+                if (todoButton) {
+                    todoButton.classList.remove('btn-secondary');
+                    todoButton.classList.add('btn-success');
+                }
+                break;
+            case 'in_progress':
+                if (inProgressButton) {
+                    inProgressButton.classList.remove('btn-secondary');
+                    inProgressButton.classList.add('btn-success');
+                }
+                break;
+            case 'done':
+                if (doneButton) {
+                    doneButton.classList.remove('btn-secondary');
+                    doneButton.classList.add('btn-success');
+                }
+                break;
+        }
+    }
+
+    function applyCurrentFilter() {
+        const container = document.getElementById('tasksContainer');
+        const taskItems = container.querySelectorAll('.task-item');
+
+        taskItems.forEach(taskItem => {
+            const statusElement = taskItem.querySelector('.task-status');
+            const taskStatus = statusElement.className.includes('status-')
+                ? statusElement.className.match(/status-(\w+)/)[1]
+                : '';
+
+            if (currentFilter === 'all' ||
+                (currentFilter === 'todo' && taskStatus === 'todo') ||
+                (currentFilter === 'in_progress' && taskStatus === 'in_progress') ||
+                (currentFilter === 'done' && taskStatus === 'done')) {
+                taskItem.style.display = 'block';
+            } else {
+                taskItem.style.display = 'none';
+            }
+        });
+
+        const visibleTasks = Array.from(taskItems).filter(item => item.style.display !== 'none');
+        if (visibleTasks.length === 0) {
+            const emptyState = container.querySelector('.empty-state');
+            if (!emptyState) {
+                const emptyStateHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-tasks"></i>
+                        <p>No tasks found with status: ${currentFilter.replace('_', ' ')}</p>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', emptyStateHTML);
+            }
+        } else {
+            const emptyState = container.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+        }
+    }
+
+    function displayTasks(tasks) {
+        const container = document.getElementById('tasksContainer');
+
+        if (!tasks || tasks.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-tasks"></i>
+                    <p>No tasks found. Create your first task!</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = '';
+
+        tasks.forEach(task => {
+            addTaskElement(container, task);
+        });
+    }
+
+    function addTaskElement(container, task) {
+        const taskElement = document.createElement('div');
+        taskElement.className = 'task-item';
+        taskElement.dataset.taskId = task.id;
+        taskElement.innerHTML = `
+            <div class="task-header">
+                <div class="task-title">${task.title} (ID: ${task.id})</div>
+                <div class="task-status status-${task.status}">
+                    ${task.status.replace('_', ' ').toUpperCase()}
+                </div>
+            </div>
+            <div class="task-description">
+                ${task.description || 'No description provided'}
+            </div>
+            <div class="task-actions">
+                <button class="btn btn-secondary" onclick="editTask(${task.id})" style="padding: 8px 12px;">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-danger" onclick="deleteTask(${task.id})" style="padding: 8px 12px;">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `;
+        container.appendChild(taskElement);
+    }
+
+    function addTaskToList(task) {
+        const container = document.getElementById('tasksContainer');
+        const emptyState = container.querySelector('.empty-state');
+
+        if (emptyState) {
+            emptyState.remove();
+        }
+
+        addTaskElement(container, task);
+
+        if (container.firstChild) {
+            container.insertBefore(container.lastChild, container.firstChild);
+        }
+
+        if (currentFilter !== 'all') {
+            applyCurrentFilter();
+        }
+    }
+
+    async function editTask(taskId) {
+        try {
+            const response = await fetch(`/api/tasks/${taskId}`);
+            if (!response.ok) {
+                throw new Error('Failed to load task details');
+            }
+
+            const task = await response.json();
+
+            document.getElementById('title').value = task.title;
+            document.getElementById('description').value = task.description || '';
+            document.getElementById('status').value = task.status;
+
+            editingTaskId = taskId;
+            document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Task';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Task';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+
+            document.querySelector('.dashboard').scrollIntoView({ behavior: 'smooth' });
+
+            showToast(`Editing task: ${task.title}`, 'info');
+
+        } catch (error) {
+            showToast('Error loading task: ' + error.message, 'error');
+            console.error('Error:', error);
+        }
+    }
+
+    function updateTaskInList(task) {
+        const taskElement = document.querySelector(`.task-item[data-task-id="${task.id}"]`);
+
+        if (taskElement) {
+            taskElement.querySelector('.task-title').textContent = `${task.title} (ID: ${task.id})`;
+            taskElement.querySelector('.task-description').textContent = task.description || 'No description provided';
+
+            const statusElement = taskElement.querySelector('.task-status');
+            statusElement.textContent = task.status.replace('_', ' ').toUpperCase();
+            statusElement.className = 'task-status';
+            statusElement.classList.add(`status-${task.status}`);
+
+            // Применяем текущий фильтр
+            if (currentFilter !== 'all') {
+                applyCurrentFilter();
+            }
+        }
+    }
+
+    async function deleteTask(taskId) {
+        if (!confirm('Are you sure you want to delete this task?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/tasks/${taskId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete task');
+            }
+
+            const taskElement = document.querySelector(`.task-item[data-task-id="${taskId}"]`);
+            if (taskElement) {
+                taskElement.remove();
+
+                const container = document.getElementById('tasksContainer');
+                const taskItems = container.querySelectorAll('.task-item');
+
+                if (taskItems.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-tasks"></i>
+                            <p>No tasks found. Create your first task!</p>
+                        </div>
+                    `;
+                } else {
+                    if (currentFilter !== 'all') {
+                        applyCurrentFilter();
+                    }
+                }
+            }
+
+            if (editingTaskId === taskId) {
+                cancelEdit();
+            }
+
+            showToast('Task deleted successfully!', 'success');
+
+        } catch (error) {
+            showToast('Error deleting task: ' + error.message, 'error');
+            console.error('Error:', error);
+        }
+    }
+
+    function updateTestForm() {
+        const endpoint = document.getElementById('testEndpoint').value;
+        const paramsDiv = document.getElementById('testParams');
+
+        let html = '';
+
+        if (endpoint.includes('{id}')) {
+            html += `
+                <div class="form-group">
+                    <label for="testId">Task ID</label>
+                    <input type="number" id="testId" class="form-control" placeholder="Enter task ID">
+                </div>
+            `;
+        }
+
+        if (endpoint.startsWith('POST') || endpoint.startsWith('PUT')) {
+            html += `
+                <div class="form-group">
+                    <label for="testTitle">Title</label>
+                    <input type="text" id="testTitle" class="form-control" placeholder="Enter task title">
+                </div>
+                <div class="form-group">
+                    <label for="testDesc">Description</label>
+                    <textarea id="testDesc" class="form-control" placeholder="Enter task description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="testStatus">Status</label>
+                    <select id="testStatus" class="form-control">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+            `;
+        }
+
+        paramsDiv.innerHTML = html;
+    }
+
+    async function sendTestRequest() {
+    const endpoint = document.getElementById('testEndpoint').value;
+    const [method, path] = endpoint.split(' ');
+
+    let url = path;
+    let options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    if (path.includes('{id}')) {
+        const taskId = document.getElementById('testId').value;
+        if (!taskId) {
+            showToast('Please enter a Task ID', 'error');
+            return;
+        }
+        url = url.replace('{id}', taskId);
+    }
+
+    if (method === 'POST' || method === 'PUT') {
+        const title = document.getElementById('testTitle').value;
+        if (!title && method === 'POST') {
+            showToast('Title is required for creating tasks', 'error');
+            return;
+        }
+
+        options.body = JSON.stringify({
+            title: title || 'Test Task',
+            description: document.getElementById('testDesc').value || 'Test description',
+            status: document.getElementById('testStatus').value
+        });
+    }
+
+    try {
+        const response = await fetch(url, options);
+        const responseDiv = document.getElementById('testResponse');
+        const responseContent = document.getElementById('responseContent');
+
+        responseDiv.style.display = 'block';
+
+        if (!response.ok) {
+            try {
+                const errorData = await response.json();
+                responseContent.textContent = `Error ${response.status}: ${response.statusText}\n\n${JSON.stringify(errorData, null, 2)}`;
+            } catch {
+                const errorText = await response.text();
+                responseContent.textContent = `Error ${response.status}: ${response.statusText}\n\n${errorText || 'No error details'}`;
+            }
+            showToast(`Request failed: ${response.status}`, 'error');
+        } else {
+            try {
+                const data = await response.json();
+                responseContent.textContent = JSON.stringify(data, null, 2);
+            } catch {
+                responseContent.textContent = `Success: ${response.status} ${response.statusText}`;
+            }
+            showToast(`${method} request successful!`, 'success');
+        }
+
+    } catch (error) {
+        document.getElementById('testResponse').style.display = 'block';
+        document.getElementById('responseContent').textContent = `Error: ${error.message}`;
+        showToast('Request failed: ' + error.message, 'error');
+        console.error('Error:', error);
+    }
+}
+</script>
+</body>
+</html>

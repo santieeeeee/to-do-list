@@ -8,17 +8,23 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
 @Tag(name = "Task Controller", description = "APIs for managing To-Do tasks")
 public class TaskController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final TaskService taskService;
 
     public TaskController(TaskService taskService) {
@@ -29,9 +35,12 @@ public class TaskController {
     @Operation(summary = "Get all tasks", description = "Retrieve a list of all tasks")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks")
     public ResponseEntity<List<Task>> getAllTasks() {
+        logger.info("GET /api/tasks - Fetching all tasks");
         List<Task> tasks = taskService.getAllTasks();
+        logger.info("Found {} tasks", tasks.size());
         return ResponseEntity.ok(tasks);
     }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Get task by ID", description = "Retrieve a specific task by its ID")
@@ -96,16 +105,23 @@ public class TaskController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a task", description = "Delete a task by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Task deleted successfully"),
+            @ApiResponse(responseCode = "200", description = "Task deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Task not found")
     })
-    public ResponseEntity<Void> deleteTask(
+    public ResponseEntity<Map<String, String>> deleteTask(
             @Parameter(description = "ID of the task to be deleted")
             @PathVariable Long id) {
-        if (taskService.deleteTask(id)) {
-            return ResponseEntity.noContent().build();
+        boolean deleted = taskService.deleteTask(id);
+        Map<String, String> response = new HashMap<>();
+
+        if (deleted) {
+            response.put("message", "Task deleted successfully");
+            response.put("id", id.toString());
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.notFound().build();
+            response.put("error", "Task not found");
+            response.put("id", id.toString());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
