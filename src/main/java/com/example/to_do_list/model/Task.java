@@ -26,13 +26,7 @@ public class Task {
     @Column(nullable = false, length = 20)
     private String status = "todo";
 
-    public Task() {}
-
-    public Task(Long id, String title, String description, String status) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.status = status;
+    public Task(Long l, String s, String s1, String todo) {
     }
 
     public Long getId() {
