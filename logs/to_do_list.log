@@ -1,14 +1,135 @@
-2026-01-06T14:15:43.993+03:00  INFO 16452 --- [main] c.e.to_do_list.ToDoListApplication       : Starting ToDoListApplication using Java 25.0.1 with PID 16452 (/Users/admin/IdeaProjects/os_kollok/target/classes started by admin in /Users/admin/IdeaProjects/os_kollok)
-2026-01-06T14:15:43.994+03:00  INFO 16452 --- [main] c.e.to_do_list.ToDoListApplication       : No active profile set, falling back to 1 default profile: "default"
-2026-01-06T14:15:44.358+03:00  INFO 16452 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-01-06T14:15:44.364+03:00  INFO 16452 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-01-06T14:15:44.364+03:00  INFO 16452 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.18]
-2026-01-06T14:15:44.386+03:00  INFO 16452 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-01-06T14:15:44.386+03:00  INFO 16452 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 373 ms
-2026-01-06T14:15:44.586+03:00  INFO 16452 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
-2026-01-06T14:15:44.590+03:00  INFO 16452 --- [main] c.e.to_do_list.ToDoListApplication       : Started ToDoListApplication in 0.818 seconds (process running for 1.186)
-2026-01-06T14:15:51.511+03:00  INFO 16452 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-01-06T14:15:51.513+03:00  INFO 16452 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-01-06T14:15:51.515+03:00  INFO 16452 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2026-01-06T14:18:08.348+03:00  WARN 16452 --- [http-nio-8080-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<com.example.to_do_list.model.Task> com.example.to_do_list.controller.TaskController.createTask(com.example.to_do_list.model.Task)]
-2026-01-06T14:18:17.181+03:00  WARN 16452 --- [http-nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<com.example.to_do_list.model.Task> com.example.to_do_list.controller.TaskController.createTask(com.example.to_do_list.model.Task)]
+2026-01-08 20:54:04 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2026-01-08 20:54:04 INFO  [main] c.e.t.ToDoListApplicationTests - Starting ToDoListApplicationTests using Java 21.0.9 with PID 30352 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 20:54:04 INFO  [main] c.e.t.ToDoListApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 20:54:05 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-08 20:54:05 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 42 ms. Found 1 JPA repository interface.
+2026-01-08 20:54:06 INFO  [main] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-08 20:54:06 INFO  [main] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
+2026-01-08 20:54:06 INFO  [main] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-01-08 20:54:06 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-08 20:54:06 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-01-08 20:54:07 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:todo_test_db user=SA
+2026-01-08 20:54:07 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-01-08 20:54:07 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-08 20:54:07 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-08 20:54:07 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 20:54:08 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-08 20:54:08 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 20:54:09 INFO  [main] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-01-08 20:54:09 INFO  [main] c.e.t.ToDoListApplicationTests - Started ToDoListApplicationTests in 4.915 seconds (process running for 6.971)
+2026-01-08 20:54:09 INFO  [main] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.to_do_list.controller.TaskControllerTest]: TaskControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-01-08 20:54:09 INFO  [main] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.to_do_list.ToDoListApplication for test class com.example.to_do_list.controller.TaskControllerTest
+2026-01-08 20:54:09 INFO  [main] c.e.t.controller.TaskControllerTest - Starting TaskControllerTest using Java 21.0.9 with PID 30352 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 20:54:09 INFO  [main] c.e.t.controller.TaskControllerTest - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 20:54:10 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 20:54:10 INFO  [main] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-01-08 20:54:10 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-01-08 20:54:10 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-01-08 20:54:10 INFO  [main] c.e.t.controller.TaskControllerTest - Started TaskControllerTest in 0.399 seconds (process running for 7.924)
+2026-01-08 20:54:10 INFO  [main] c.e.t.controller.TaskController - GET /api/tasks - Fetching all tasks
+2026-01-08 20:54:10 INFO  [main] c.e.t.controller.TaskController - Found 2 tasks
+2026-01-08 20:54:10 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 20:54:10 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-01-08 20:54:10 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-01-08 21:02:17 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2026-01-08 21:02:17 INFO  [main] c.e.t.ToDoListApplicationTests - Starting ToDoListApplicationTests using Java 21.0.9 with PID 11272 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 21:02:17 INFO  [main] c.e.t.ToDoListApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 21:02:18 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-08 21:02:18 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 51 ms. Found 1 JPA repository interface.
+2026-01-08 21:02:19 INFO  [main] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-08 21:02:19 INFO  [main] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
+2026-01-08 21:02:19 INFO  [main] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-01-08 21:02:19 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-08 21:02:19 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-01-08 21:02:20 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:todo_test_db user=SA
+2026-01-08 21:02:20 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-01-08 21:02:20 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-08 21:02:20 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-08 21:02:20 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 21:02:21 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-08 21:02:21 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 21:02:22 INFO  [main] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-01-08 21:02:22 INFO  [main] c.e.t.ToDoListApplicationTests - Started ToDoListApplicationTests in 4.689 seconds (process running for 6.728)
+2026-01-08 21:02:22 INFO  [main] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.to_do_list.controller.TaskControllerTest]: TaskControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-01-08 21:02:22 INFO  [main] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.to_do_list.ToDoListApplication for test class com.example.to_do_list.controller.TaskControllerTest
+2026-01-08 21:02:22 INFO  [main] c.e.t.controller.TaskControllerTest - Starting TaskControllerTest using Java 21.0.9 with PID 11272 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 21:02:22 INFO  [main] c.e.t.controller.TaskControllerTest - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 21:02:23 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 21:02:23 INFO  [main] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-01-08 21:02:23 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-01-08 21:02:23 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-01-08 21:02:23 INFO  [main] c.e.t.controller.TaskControllerTest - Started TaskControllerTest in 0.383 seconds (process running for 7.63)
+2026-01-08 21:02:23 WARN  [main] c.e.t.e.GlobalExceptionHandler - IllegalArgument: Invalid status - path=uri=/api/tasks/2
+2026-01-08 21:02:23 INFO  [main] c.e.t.controller.TaskController - GET /api/tasks - Fetching all tasks
+2026-01-08 21:02:23 INFO  [main] c.e.t.controller.TaskController - Found 2 tasks
+2026-01-08 21:02:23 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 21:02:23 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-01-08 21:02:23 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-01-08 21:27:35 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2026-01-08 21:27:35 INFO  [main] c.e.t.ToDoListApplicationTests - Starting ToDoListApplicationTests using Java 21.0.9 with PID 24404 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 21:27:35 INFO  [main] c.e.t.ToDoListApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 21:27:36 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-08 21:27:36 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 43 ms. Found 1 JPA repository interface.
+2026-01-08 21:27:36 INFO  [main] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-08 21:27:36 INFO  [main] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
+2026-01-08 21:27:36 INFO  [main] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-01-08 21:27:37 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-08 21:27:37 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-01-08 21:27:37 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:todo_test_db user=SA
+2026-01-08 21:27:37 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-01-08 21:27:37 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-08 21:27:37 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-08 21:27:37 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 21:27:38 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-08 21:27:38 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 21:27:39 INFO  [main] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-01-08 21:27:39 INFO  [main] c.e.t.ToDoListApplicationTests - Started ToDoListApplicationTests in 5.0 seconds (process running for 7.173)
+2026-01-08 21:27:40 INFO  [main] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.to_do_list.controller.TaskControllerTest]: TaskControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-01-08 21:27:40 INFO  [main] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.to_do_list.ToDoListApplication for test class com.example.to_do_list.controller.TaskControllerTest
+2026-01-08 21:27:40 INFO  [main] c.e.t.controller.TaskControllerTest - Starting TaskControllerTest using Java 21.0.9 with PID 24404 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 21:27:40 INFO  [main] c.e.t.controller.TaskControllerTest - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 21:27:40 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 21:27:40 INFO  [main] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-01-08 21:27:40 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-01-08 21:27:40 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-01-08 21:27:40 INFO  [main] c.e.t.controller.TaskControllerTest - Started TaskControllerTest in 0.459 seconds (process running for 8.231)
+2026-01-08 21:27:40 WARN  [main] c.e.t.e.GlobalExceptionHandler - IllegalArgument: Invalid status - path=uri=/api/tasks/2
+2026-01-08 21:27:40 INFO  [main] c.e.t.controller.TaskController - GET /api/tasks - Fetching all tasks
+2026-01-08 21:27:40 INFO  [main] c.e.t.controller.TaskController - Found 2 tasks
+2026-01-08 21:27:41 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 21:27:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-01-08 21:27:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-01-08 21:29:18 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2026-01-08 21:29:18 INFO  [main] c.e.t.ToDoListApplicationTests - Starting ToDoListApplicationTests using Java 21.0.9 with PID 30380 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 21:29:18 INFO  [main] c.e.t.ToDoListApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 21:29:20 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-08 21:29:20 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 1 JPA repository interface.
+2026-01-08 21:29:20 INFO  [main] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-08 21:29:20 INFO  [main] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
+2026-01-08 21:29:20 INFO  [main] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-01-08 21:29:21 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-08 21:29:21 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-01-08 21:29:21 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:todo_test_db user=SA
+2026-01-08 21:29:21 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-01-08 21:29:21 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-08 21:29:21 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-08 21:29:22 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 21:29:22 WARN  [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-08 21:29:22 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 21:29:23 INFO  [main] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-01-08 21:29:23 INFO  [main] c.e.t.ToDoListApplicationTests - Started ToDoListApplicationTests in 5.372 seconds (process running for 7.516)
+2026-01-08 21:29:24 INFO  [main] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.to_do_list.controller.TaskControllerTest]: TaskControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-01-08 21:29:24 INFO  [main] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.to_do_list.ToDoListApplication for test class com.example.to_do_list.controller.TaskControllerTest
+2026-01-08 21:29:24 INFO  [main] c.e.t.controller.TaskControllerTest - Starting TaskControllerTest using Java 21.0.9 with PID 30380 (started by Lenovo in D:\writtenprogramms\to-do-list)
+2026-01-08 21:29:24 INFO  [main] c.e.t.controller.TaskControllerTest - No active profile set, falling back to 1 default profile: "default"
+2026-01-08 21:29:24 INFO  [main] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-01-08 21:29:24 INFO  [main] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-01-08 21:29:24 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-01-08 21:29:24 INFO  [main] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-01-08 21:29:24 INFO  [main] c.e.t.controller.TaskControllerTest - Started TaskControllerTest in 0.442 seconds (process running for 8.539)
+2026-01-08 21:29:25 WARN  [main] c.e.t.e.GlobalExceptionHandler - IllegalArgument: Invalid status - path=uri=/api/tasks/2
+2026-01-08 21:29:25 INFO  [main] c.e.t.controller.TaskController - GET /api/tasks - Fetching all tasks
+2026-01-08 21:29:25 INFO  [main] c.e.t.controller.TaskController - Found 2 tasks
+2026-01-08 21:29:25 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-08 21:29:25 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-01-08 21:29:25 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
