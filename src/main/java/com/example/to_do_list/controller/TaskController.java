@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -108,20 +106,14 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Task deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Task not found")
     })
-    public ResponseEntity<Map<String, String>> deleteTask(
+    public ResponseEntity<Void> deleteTask(
             @Parameter(description = "ID of the task to be deleted")
             @PathVariable Long id) {
         boolean deleted = taskService.deleteTask(id);
-        Map<String, String> response = new HashMap<>();
-
         if (deleted) {
-            response.put("message", "Task deleted successfully");
-            response.put("id", id.toString());
-            return ResponseEntity.ok(response);
+            return ResponseEntity.noContent().build();
         } else {
-            response.put("error", "Task not found");
-            response.put("id", id.toString());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.notFound().build();
         }
     }
 

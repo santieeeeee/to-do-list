@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TaskService {
@@ -61,13 +62,25 @@ public class TaskService {
     public Optional<Task> patchTask(Long id, Task partial) {
         return taskRepository.findById(id)
                 .map(existing -> {
-                    if (partial.getTitle() != null && !partial.getTitle().isEmpty()) {
+                    // Validate and apply partial updates
+                    if (partial.getTitle() != null) {
+                        if (partial.getTitle().isBlank()) {
+                            throw new IllegalArgumentException("Title cannot be blank");
+                        }
                         existing.setTitle(partial.getTitle());
                     }
                     if (partial.getDescription() != null) {
+                        if (partial.getDescription().length() > 1000) {
+                            throw new IllegalArgumentException("Description is too long");
+                        }
                         existing.setDescription(partial.getDescription());
                     }
-                    if (partial.getStatus() != null && !partial.getStatus().isEmpty()) {
+                    if (partial.getStatus() != null) {
+                        // allowed statuses
+                        final Set<String> allowed = Set.of("todo", "in_progress", "done");
+                        if (!allowed.contains(partial.getStatus())) {
+                            throw new IllegalArgumentException("Invalid status: " + partial.getStatus());
+                        }
                         existing.setStatus(partial.getStatus());
                     }
                     return taskRepository.save(existing);

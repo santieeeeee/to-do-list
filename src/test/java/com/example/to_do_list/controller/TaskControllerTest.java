@@ -150,4 +150,38 @@ public class TaskControllerTest {
 
         verify(taskService, times(1)).deleteTask(999L);
     }
+
+    @Test
+    void patchTask_shouldUpdateStatus() throws Exception {
+        Task partial = new Task();
+        partial.setStatus("done");
+
+        Task saved = new Task(2L, "Launch API", "Deploy application", "done");
+
+        when(taskService.patchTask(eq(2L), any(Task.class))).thenReturn(Optional.of(saved));
+
+        mockMvc.perform(patch("/api/tasks/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(partial)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.status", is("done")));
+
+        verify(taskService, times(1)).patchTask(eq(2L), any(Task.class));
+    }
+
+    @Test
+    void patchTask_shouldReturnBadRequest_forInvalidStatus() throws Exception {
+        Task partial = new Task();
+        partial.setStatus("invalid_status");
+
+        when(taskService.patchTask(eq(2L), any(Task.class))).thenThrow(new IllegalArgumentException("Invalid status"));
+
+        mockMvc.perform(patch("/api/tasks/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(partial)))
+                .andExpect(status().isBadRequest());
+
+        verify(taskService, times(1)).patchTask(eq(2L), any(Task.class));
+    }
 }
