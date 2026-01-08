@@ -1,7 +1,7 @@
 package com.example.to_do_list.service;
 
 import com.example.to_do_list.model.Task;
-import com.example.to_do_list.repository.TaskRepository;
+import com.example.to_do_list.store.TaskStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 public class TaskServiceTest {
 
     @Mock
-    private TaskRepository taskRepository;
+    private TaskStore taskRepository;
 
     @InjectMocks
     private TaskService taskService;

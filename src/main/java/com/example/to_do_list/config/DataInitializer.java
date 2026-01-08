@@ -1,7 +1,7 @@
 package com.example.to_do_list.config;
 
 import com.example.to_do_list.model.Task;
-import com.example.to_do_list.repository.TaskRepository;
+import com.example.to_do_list.store.TaskStore;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class DataInitializer {
 
     @Bean
-    public CommandLineRunner initDatabase(TaskRepository repository) {
+    public CommandLineRunner initDatabase(TaskStore repository) {
         return args -> {
             repository.deleteAll();
 

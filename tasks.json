@@ -1,0 +1,16 @@
+[ {
+  "id" : 1,
+  "title" : "Complete Spring Boot Project",
+  "description" : "Finish the To-Do List API with H2 database",
+  "status" : "in_progress"
+}, {
+  "id" : 2,
+  "title" : "Test API Endpoints",
+  "description" : "Test all CRUD operations using Swagger UI",
+  "status" : "todo"
+}, {
+  "id" : 3,
+  "title" : "Deploy Application",
+  "description" : "Deploy to cloud platform",
+  "status" : "done"
+} ]

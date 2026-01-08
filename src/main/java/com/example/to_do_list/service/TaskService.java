@@ -1,7 +1,7 @@
 package com.example.to_do_list.service;
 
 import com.example.to_do_list.model.Task;
-import com.example.to_do_list.repository.TaskRepository;
+import com.example.to_do_list.store.TaskStore;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,9 +15,9 @@ import java.util.Set;
 @Service
 public class TaskService {
 
-    private final TaskRepository taskRepository;
+    private final TaskStore taskRepository;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskStore taskRepository) {
         this.taskRepository = taskRepository;
     }
 
@@ -101,7 +101,7 @@ public class TaskService {
     // Фильтрация по статусу — не кэшируем, т.к. зависит от getAllTasks()
     public List<Task> getTasksByStatus(String status) {
         return getAllTasks().stream()
-                .filter(task -> status.equals(task.getStatus()))
-                .toList();
+            .filter(task -> status.equals(task.getStatus()))
+            .toList();
     }
 }
