@@ -1,16 +1,20 @@
-[ {
-  "id" : 1,
-  "title" : "Complete Spring Boot Project",
-  "description" : "Finish the To-Do List API with H2 database",
-  "status" : "in_progress"
-}, {
-  "id" : 2,
-  "title" : "Test API Endpoints",
-  "description" : "Test all CRUD operations using Swagger UI",
-  "status" : "todo"
-}, {
-  "id" : 3,
-  "title" : "Deploy Application",
-  "description" : "Deploy to cloud platform",
-  "status" : "done"
-} ]
+[
+  {
+    "id": 1,
+    "title": "Купить хлеб",
+    "description": "Купить батон или булочки для завтрака",
+    "status": "todo"
+  },
+  {
+    "id": 2,
+    "title": "Позвонить маме",
+    "description": "Уточнить планы на выходные",
+    "status": "in_progress"
+  },
+  {
+    "id": 3,
+    "title": "Прочитать 10 страниц",
+    "description": "Прочитать 10 страниц текущей книги перед сном",
+    "status": "done"
+  }
+]
