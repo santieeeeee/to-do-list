@@ -411,6 +411,26 @@
         .toast-info {
             border-left: 4px solid #4299e1;
         }
+
+        .warning-note {
+            background-color: #fefcbf;
+            border-left: 4px solid #f6ad55;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            color: #744210;
+            font-size: 0.9rem;
+        }
+
+        optgroup {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        optgroup option {
+            font-weight: normal;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -496,6 +516,9 @@
             </div>
 
             <div id="endpointsTab" class="tab-content active">
+                <div class="warning-note">
+                    <i class="fas fa-exclamation-triangle"></i> Note: Swagger UI and H2 Console may not be available on all deployments
+                </div>
                 <div class="api-endpoints">
                     <div class="endpoint-item">
                         <span class="endpoint-method method-get">GET</span>
@@ -534,26 +557,37 @@
                     </div>
                     <div class="endpoint-item">
                         <span class="endpoint-method method-get">GET</span>
-                        <span class="endpoint-path">/swagger-ui</span>
-                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Swagger UI</p>
+                        <span class="endpoint-path">/swagger-ui.html</span>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Swagger UI (if configured)</p>
                     </div>
                     <div class="endpoint-item">
                         <span class="endpoint-method method-get">GET</span>
                         <span class="endpoint-path">/h2-console</span>
-                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Database Console</p>
+                        <p style="margin-top: 8px; font-size: 0.9rem; color: #718096;">Database Console (if configured)</p>
                     </div>
                 </div>
             </div>
 
             <div id="testTab" class="tab-content">
+                <div class="warning-note">
+                    <i class="fas fa-info-circle"></i> Some endpoints (Swagger UI, H2 Console) might require specific server configuration
+                </div>
                 <div class="form-group">
                     <label for="testEndpoint">Select Endpoint</label>
                     <select id="testEndpoint" class="form-control" onchange="updateTestForm()">
-                        <option value="GET /api/tasks">GET /api/tasks</option>
-                        <option value="GET /api/tasks/{id}">GET /api/tasks/{id}</option>
-                        <option value="POST /api/tasks">POST /api/tasks</option>
-                        <option value="PUT /api/tasks/{id}">PUT /api/tasks/{id}</option>
-                        <option value="DELETE /api/tasks/{id}">DELETE /api/tasks/{id}</option>
+                        <optgroup label="Task Endpoints">
+                            <option value="GET /api/tasks">GET /api/tasks</option>
+                            <option value="GET /api/tasks/{id}">GET /api/tasks/{id}</option>
+                            <option value="POST /api/tasks">POST /api/tasks</option>
+                            <option value="PUT /api/tasks/{id}">PUT /api/tasks/{id}</option>
+                            <option value="PATCH /api/tasks/{id}">PATCH /api/tasks/{id}</option>
+                            <option value="DELETE /api/tasks/{id}">DELETE /api/tasks/{id}</option>
+                            <option value="GET /api/tasks/status/{status}">GET /api/tasks/status/{status}</option>
+                        </optgroup>
+                        <optgroup label="Tools (may not be available)">
+                            <option value="GET /swagger-ui.html">GET /swagger-ui.html</option>
+                            <option value="GET /h2-console">GET /h2-console</option>
+                        </optgroup>
                     </select>
                 </div>
 
@@ -581,7 +615,9 @@
                     "id": 1,
                     "title": "Task title",
                     "description": "Task description",
-                    "status": "todo"
+                    "status": "todo",
+                    "createdAt": "2024-01-01T10:00:00",
+                    "updatedAt": "2024-01-01T11:00:00"
                     }
                 </div>
 
@@ -592,14 +628,22 @@
                     <li><strong>done</strong>: Task is completed</li>
                 </ul>
 
+                <h4 style="margin: 20px 0 10px 0; color: #4a5568;">Common Errors</h4>
+                <ul style="padding-left: 20px; color: #4a5568;">
+                    <li><strong>404</strong>: Resource not found</li>
+                    <li><strong>400</strong>: Bad request (invalid input)</li>
+                    <li><strong>500</strong>: Internal server error</li>
+                </ul>
+
                 <h4 style="margin: 20px 0 10px 0; color: #4a5568;">Testing Tools</h4>
                 <p style="margin-bottom: 15px; line-height: 1.6;">
                     You can also test the API using:
                 </p>
                 <ul style="padding-left: 20px; color: #4a5568;">
-                    <li><strong>Swagger UI</strong>: <a href="/swagger-ui" style="color: #667eea;">/swagger-ui</a></li>
-                    <li><strong>Database Console</strong>: <a href="/h2-console" style="color: #667eea;">/h2-console</a> (JDBC URL: jdbc:h2:mem:todo_db)</li>
+                    <li><strong>Swagger UI</strong>: <a href="/swagger-ui.html" style="color: #667eea;">/swagger-ui.html</a> (if configured)</li>
+                    <li><strong>Database Console</strong>: <a href="/h2-console" style="color: #667eea;">/h2-console</a> (if configured, JDBC URL: jdbc:h2:mem:todo_db)</li>
                     <li><strong>cURL</strong>: Use the command line for testing</li>
+                    <li><strong>Postman</strong>: Import API collection</li>
                 </ul>
             </div>
         </div>
@@ -663,7 +707,6 @@
             tab.classList.remove('active');
         });
 
-        // Find the clicked tab and add active class
         const tabs = document.querySelectorAll('.tab');
         for (let i = 0; i < tabs.length; i++) {
             if (tabs[i].textContent.includes(tabName === 'endpoints' ? 'Endpoints' :
@@ -976,7 +1019,6 @@
             statusElement.className = 'task-status';
             statusElement.classList.add(`status-${task.status}`);
 
-            // Применяем текущий фильтр
             if (currentFilter !== 'all') {
                 applyCurrentFilter();
             }
@@ -1036,32 +1078,55 @@
 
         let html = '';
 
-        if (endpoint.includes('{id}')) {
-            html += `
-                <div class="form-group">
-                    <label for="testId">Task ID</label>
-                    <input type="number" id="testId" class="form-control" placeholder="Enter task ID">
-                </div>
-            `;
-        }
+        if (endpoint.includes('/api/tasks')) {
+            if (endpoint.includes('{id}') && !endpoint.includes('status')) {
+                html += `
+                    <div class="form-group">
+                        <label for="testId">Task ID</label>
+                        <input type="number" id="testId" class="form-control" placeholder="Enter task ID" required>
+                    </div>
+                `;
+            }
 
-        if (endpoint.startsWith('POST') || endpoint.startsWith('PUT')) {
+            if (endpoint.includes('status/{status}')) {
+                html += `
+                    <div class="form-group">
+                        <label for="testStatusParam">Status</label>
+                        <select id="testStatusParam" class="form-control" required>
+                            <option value="todo">To Do</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </div>
+                `;
+            }
+
+            if (endpoint.startsWith('POST') || endpoint.startsWith('PUT') || endpoint.startsWith('PATCH')) {
+                html += `
+                    <div class="form-group">
+                        <label for="testTitle">Title *</label>
+                        <input type="text" id="testTitle" class="form-control" placeholder="Enter task title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="testDesc">Description</label>
+                        <textarea id="testDesc" class="form-control" placeholder="Enter task description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="testStatus">Status</label>
+                        <select id="testStatus" class="form-control">
+                            <option value="todo">To Do</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </div>
+                `;
+            }
+        } else {
             html += `
-                <div class="form-group">
-                    <label for="testTitle">Title</label>
-                    <input type="text" id="testTitle" class="form-control" placeholder="Enter task title">
-                </div>
-                <div class="form-group">
-                    <label for="testDesc">Description</label>
-                    <textarea id="testDesc" class="form-control" placeholder="Enter task description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="testStatus">Status</label>
-                    <select id="testStatus" class="form-control">
-                        <option value="todo">To Do</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="done">Done</option>
-                    </select>
+                <div class="warning-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    This endpoint (${endpoint}) might not be available on all deployments.
+                    It requires specific server configuration.
                 </div>
             `;
         }
@@ -1070,73 +1135,150 @@
     }
 
     async function sendTestRequest() {
-    const endpoint = document.getElementById('testEndpoint').value;
-    const [method, path] = endpoint.split(' ');
+        const endpoint = document.getElementById('testEndpoint').value;
+        const [method, path] = endpoint.split(' ');
 
-    let url = path;
-    let options = {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    };
+        if ((path === '/swagger-ui.html' || path === '/h2-console') && method === 'GET') {
+            const proceed = confirm(`Warning: This endpoint (${path}) might not be configured on the server.\n\n` +
+                                 `You might get a 404 or 500 error if it's not available.\n\n` +
+                                 `Continue with the request?`);
 
-    if (path.includes('{id}')) {
-        const taskId = document.getElementById('testId').value;
-        if (!taskId) {
-            showToast('Please enter a Task ID', 'error');
-            return;
-        }
-        url = url.replace('{id}', taskId);
-    }
-
-    if (method === 'POST' || method === 'PUT') {
-        const title = document.getElementById('testTitle').value;
-        if (!title && method === 'POST') {
-            showToast('Title is required for creating tasks', 'error');
-            return;
-        }
-
-        options.body = JSON.stringify({
-            title: title || 'Test Task',
-            description: document.getElementById('testDesc').value || 'Test description',
-            status: document.getElementById('testStatus').value
-        });
-    }
-
-    try {
-        const response = await fetch(url, options);
-        const responseDiv = document.getElementById('testResponse');
-        const responseContent = document.getElementById('responseContent');
-
-        responseDiv.style.display = 'block';
-
-        if (!response.ok) {
-            try {
-                const errorData = await response.json();
-                responseContent.textContent = `Error ${response.status}: ${response.statusText}\n\n${JSON.stringify(errorData, null, 2)}`;
-            } catch {
-                const errorText = await response.text();
-                responseContent.textContent = `Error ${response.status}: ${response.statusText}\n\n${errorText || 'No error details'}`;
+            if (!proceed) {
+                return;
             }
-            showToast(`Request failed: ${response.status}`, 'error');
-        } else {
-            try {
-                const data = await response.json();
-                responseContent.textContent = JSON.stringify(data, null, 2);
-            } catch {
-                responseContent.textContent = `Success: ${response.status} ${response.statusText}`;
-            }
-            showToast(`${method} request successful!`, 'success');
         }
 
-    } catch (error) {
-        document.getElementById('testResponse').style.display = 'block';
-        document.getElementById('responseContent').textContent = `Error: ${error.message}`;
-        showToast('Request failed: ' + error.message, 'error');
-        console.error('Error:', error);
+        let url = path;
+        let options = {
+            method: method,
+            headers: {}
+        };
+
+        if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+            options.headers['Content-Type'] = 'application/json';
+        }
+
+        if (url.includes('{id}') && url.includes('/api/tasks')) {
+            const taskId = document.getElementById('testId').value;
+            if (!taskId && method !== 'POST') {
+                showToast('Please enter a Task ID', 'error');
+                return;
+            }
+            url = url.replace('{id}', taskId || '');
+        }
+
+        if (url.includes('{status}') && url.includes('/api/tasks')) {
+            const statusParam = document.getElementById('testStatusParam').value;
+            if (!statusParam) {
+                showToast('Please select a status', 'error');
+                return;
+            }
+            url = url.replace('{status}', statusParam);
+        }
+
+        if ((method === 'POST' || method === 'PUT' || method === 'PATCH') && url.includes('/api/tasks')) {
+            const title = document.getElementById('testTitle').value;
+            if (method === 'POST' && !title) {
+                showToast('Title is required for creating tasks', 'error');
+                return;
+            }
+
+            options.body = JSON.stringify({
+                title: title || 'Test Task',
+                description: document.getElementById('testDesc').value || 'Test description',
+                status: document.getElementById('testStatus').value
+            });
+        }
+
+        try {
+            const response = await fetch(url, options);
+            const responseDiv = document.getElementById('testResponse');
+            const responseContent = document.getElementById('responseContent');
+
+            responseDiv.style.display = 'block';
+
+            if (!response.ok) {
+                let errorMessage = `Error ${response.status}: ${response.statusText}`;
+
+                try {
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const errorData = await response.json();
+                        errorMessage += `\n\n${JSON.stringify(errorData, null, 2)}`;
+                    } else {
+                        const errorText = await response.text();
+                        if (errorText) {
+                            errorMessage += `\n\n${errorText}`;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to parse error response:', e);
+                }
+
+                responseContent.textContent = errorMessage;
+
+                if (response.status === 404 || response.status === 500) {
+                    if (url.includes('swagger-ui') || url.includes('h2-console')) {
+                        showToast(`${path} is not configured on this server`, 'info');
+                    } else {
+                        showToast(`Request failed: ${response.status}`, 'error');
+                    }
+                } else {
+                    showToast(`Request failed: ${response.status}`, 'error');
+                }
+            } else {
+                try {
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const data = await response.json();
+                        responseContent.textContent = JSON.stringify(data, null, 2);
+                    } else if (contentType && contentType.includes('text/html')) {
+                        const text = await response.text();
+                        responseContent.textContent = `HTML Response (${response.status} ${response.statusText})\n\n` +
+                                                     `Content-Type: ${contentType}\n` +
+                                                     `Length: ${text.length} characters\n\n` +
+                                                     `The endpoint returned an HTML page. ` +
+                                                     `You can visit it directly at ${url}`;
+                    } else {
+                        const text = await response.text();
+                        responseContent.textContent = `Response (${response.status} ${response.statusText})\n\n` +
+                                                     `Content-Type: ${contentType || 'unknown'}\n` +
+                                                     `Length: ${text.length} characters\n\n` +
+                                                     text.substring(0, 1000) + (text.length > 1000 ? '...' : '');
+                    }
+                } catch (e) {
+                    responseContent.textContent = `Success: ${response.status} ${response.statusText}\n` +
+                                                 `Failed to parse response body: ${e.message}`;
+                }
+
+                if (url.includes('swagger-ui') || url.includes('h2-console')) {
+                    showToast(`${path} is available. You can visit it directly in your browser.`, 'success');
+                } else {
+                    showToast(`${method} request successful!`, 'success');
+                }
+            }
+
+        } catch (error) {
+            document.getElementById('testResponse').style.display = 'block';
+            let errorMessage = `Network Error: ${error.message}`;
+
+            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                errorMessage += '\n\nPossible causes:\n' +
+                              '1. CORS issue - server might not allow requests from this origin\n' +
+                              '2. Server is not running\n' +
+                              '3. Network connectivity issue';
+            }
+
+            document.getElementById('responseContent').textContent = errorMessage;
+
+            if (url.includes('swagger-ui') || url.includes('h2-console')) {
+                showToast(`Cannot reach ${path}. Server might not be running or CORS is not configured.`, 'error');
+            } else {
+                showToast('Request failed: ' + error.message, 'error');
+            }
+            console.error('Error:', error);
+        }
     }
-}
 </script>
 </body>
 </html>
